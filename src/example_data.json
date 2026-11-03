@@ -1,0 +1,18 @@
+{
+  "test_request_valid": {
+    "title": "Диван кожаный",
+    "description": "Угловой диван из экокожи",
+    "model_file": "sofa.gltf",
+    "price": 45000
+  },
+  "test_request_invalid": {
+    "title": "Стол",
+    "model_file": "table.gltf"
+  },
+  "test_catalog": [
+    {"id": 1, "name": "Стул", "tags": ["дерево", "кухня", "мебель"]},
+    {"id": 2, "name": "Стол", "tags": ["дерево", "офис", "мебель"]},
+    {"id": 3, "name": "Лампа", "tags": ["свет", "офис"]}
+  ],
+  "test_query_tags": ["дерево", "офис"]
+}
