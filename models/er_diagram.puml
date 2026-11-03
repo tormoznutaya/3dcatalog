@@ -1,0 +1,54 @@
+@startuml
+hide circle
+skinparam linetype ortho
+
+entity "Товар" {
+  * id_товара : int
+  --
+  название : string
+  описание : text
+  цена : decimal
+}
+
+entity "3D-Модель" {
+  * id_модели : int
+  --
+  id_товара : int <<FK>>
+  путь_к_файлу : string
+  формат : string
+  статус : string
+}
+
+entity "Заявка" {
+  * id_заявки : int
+  --
+  id_товароведа : int <<FK>>
+  id_модели : int <<FK>>
+  дата : date
+}
+
+entity "Тег" {
+  * id_тега : int
+  --
+  название : string
+}
+
+entity "Модель_Тег" {
+  * id_модели : int <<FK>>
+  * id_тега : int <<FK>>
+}
+
+entity "Пользователь" {
+  * id_пользователя : int
+  --
+  ФИО : string
+  роль : string
+}
+
+Товар ||--o{ "3D-Модель" : "имеет"
+"3D-Модель" ||--o{ "Модель_Тег" : ""
+Тег ||--o{ "Модель_Тег" : ""
+Пользователь ||--o{ Заявка : "создает"
+"3D-Модель" ||--o| Заявка : "включается в"
+
+@enduml

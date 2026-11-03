@@ -1,0 +1,17 @@
+@startuml
+start
+:Получить заявку;
+:required = список полей;
+:missing = пустой список;
+while (Есть непроверенные поля?) is (да)
+  if (Поле отсутствует?) then (да)
+    :Добавить в missing;
+  endif
+endwhile (нет)
+if (missing не пуст?) then (да)
+  :Вернуть False и missing;
+else (нет)
+  :Вернуть True;
+endif
+stop
+@enduml

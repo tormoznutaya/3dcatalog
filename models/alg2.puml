@@ -1,0 +1,18 @@
+@startuml
+start
+:results = пустой список;
+while (Есть модели?) is (да)
+  :match_count = 0;
+  while (Есть теги в запросе?) is (да)
+    if (Тег есть у модели?) then (да)
+      :match_count += 1;
+    endif
+  endwhile (нет)
+  if (match_count > 0) then (да)
+    :Добавить модель в results;
+  endif
+endwhile (нет)
+:Отсортировать results;
+:Вывести results;
+stop
+@enduml
