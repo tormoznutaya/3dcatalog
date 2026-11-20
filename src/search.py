@@ -1,43 +1,16 @@
-# Поиск моделей по тегам 
-# Сложность O(n*m), где n - модели, m - теги запроса
-# Есть вложенный цикл
-
+# Сложность по времени: O(n*m + n*log n), где n — число моделей в каталоге, m — число тегов в поисковом запросе, n*m  — вложенный цикл (модели x теги запроса), каждая проверка O(1), n*log n — сортировка результатов (Timsort).
+# Сложность по памяти: O(n) — список результатов.
 def search_models(models, search_tags):
     results = []
-
-    # Внешний цикл: проходим по всем моделям
     for model in models:
+        model_tags = model.get("tags", set())
+        if not isinstance(model_tags, set):
+            model_tags = set(model_tags)
         match_count = 0
-        
-        # Вложенный цикл: проверяем каждый тег из запроса
         for tag in search_tags:
-            if tag in model.get("tags", []):
+            if tag in model_tags:   # O(1), потому что model_tags — множество
                 match_count += 1
-                
-        # Если совпал хотя бы один тег, добавляем в результаты
         if match_count > 0:
-            results.append({
-                "model": model,
-                "matches": match_count
-            })
-
-    # Сортируем результаты: больше совпадений — выше в списке
-    # Используем встроенную сортировку (Timsort)
+            results.append({"model": model, "matches": match_count})
     results.sort(key=lambda x: x["matches"], reverse=True)
-    
     return results
-
-
-if __name__ == "__main__":
-    catalog = [
-        {"id": 1, "name": "Стул", "tags": ["дерево", "кухня", "мебель"]},
-        {"id": 2, "name": "Стол", "tags": ["дерево", "офис", "мебель"]},
-        {"id": 3, "name": "Лампа", "tags": ["свет", "офис"]}
-    ]
-    
-    query = ["дерево", "офис"]
-    found = search_models(catalog, query)
-    
-    print("Найдено моделей:", len(found))
-    for item in found:
-        print(f"- {item['model']['name']} (совпадений: {item['matches']})")
