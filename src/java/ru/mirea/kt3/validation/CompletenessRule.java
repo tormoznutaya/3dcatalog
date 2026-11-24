@@ -1,6 +1,6 @@
-package ru.mirea.kt3.validation;
+package java.ru.mirea.kt3.validation;
 
-import ru.mirea.kt3.domain.Request;
+import java.ru.mirea.kt3.domain.Request;
 
 import java.util.ArrayList;
 import java.util.List;
