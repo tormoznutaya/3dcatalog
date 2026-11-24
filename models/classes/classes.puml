@@ -1,0 +1,245 @@
+@startuml classes
+' ===== Стиль =====
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam roundCorner 6
+skinparam defaultFontName "DejaVu Sans"
+skinparam defaultFontSize 11
+
+skinparam class {
+    BackgroundColor #F8FAFC
+    BorderColor #4C6EF5
+    BorderThickness 1
+    ArrowColor #64748B
+    HeaderBackgroundColor #E9EEF3
+}
+
+skinparam interface {
+    BackgroundColor #F0FDF4
+    BorderColor #16A34A
+    HeaderBackgroundColor #DCFCE7
+}
+
+skinparam abstract {
+    BackgroundColor #FFF7ED
+    BorderColor #C2410C
+    HeaderBackgroundColor #FED7AA
+}
+
+skinparam package {
+    BorderColor #94A3B8
+    BackgroundColor #FFFFFF
+    FontStyle bold
+    FontColor #243447
+}
+
+title <size:16>**Диаграмма классов ООП-реализации 3D-каталога товаров (КТ3)**</size>\n<size:11>17 классов в 5 пакетах, Java 21</size>
+
+' ===== Пакет domain =====
+package "ru.mirea.kt3.domain" #F8FAFC {
+
+    abstract class User {
+        - id: int
+        - fullName: String
+        - role: String
+        # User(id: int, fullName: String, role: String)
+        + getId(): int
+        + getFullName(): String
+        + getRole(): String
+        + {abstract} describeRole(): String
+    }
+
+    class Product {
+        - id: int
+        - name: String
+        - description: String
+        - price: BigDecimal
+        + Product(id, name, description, price)
+        + getId(): int
+        + getName(): String
+        + setName(name: String)
+        + equals(o: Object): boolean
+        + hashCode(): int
+    }
+
+    class Tag {
+        - id: int
+        - name: String
+        + Tag(id: int, name: String)
+        + getId(): int
+        + getName(): String
+        + equals(o: Object): boolean
+        + hashCode(): int
+        + toString(): String
+    }
+
+    class Model3D {
+        - id: int
+        - productId: int
+        - filePath: String
+        - format: String
+        - status: String
+        - tags: Set<Tag>
+        + Model3D(id, productId, filePath, format, status)
+        + getId(): int
+        + getProductId(): int
+        + getTags(): Set<Tag>
+        + addTag(tag: Tag): void
+        + setStatus(status: String): void
+    }
+
+    class Request {
+        - id: int
+        - userId: Integer
+        - modelId: Integer
+        - date: LocalDate
+        + Request(id, userId, modelId, date)
+        + getUserId(): Integer
+        + getModelId(): Integer
+        + getDate(): LocalDate
+    }
+}
+
+' ===== Пакет users =====
+package "ru.mirea.kt3.users" #F8FAFC {
+
+    class ContentManager {
+        + ContentManager(id: int, fullName: String)
+        + describeRole(): String
+        + validateAndPublish(model: Model3D, rule: Rule<Model3D>): boolean
+    }
+
+    class Designer3D {
+        + Designer3D(id: int, fullName: String)
+        + describeRole(): String
+        + createModel(modelId, productId, filePath, format): Model3D
+    }
+
+    class Merchandiser {
+        + Merchandiser(id: int, fullName: String)
+        + describeRole(): String
+        + createRequest(requestId: int, modelId: int): Request
+    }
+}
+
+' ===== Пакет validation =====
+package "ru.mirea.kt3.validation" #F8FAFC {
+
+    interface Rule<T> {
+        + validate(target: T): ValidationResult
+    }
+
+    class CompletenessRule {
+        - REQUIRED_FIELDS: List<String> {static}
+        + {static} getRequiredFields(): List<String>
+        + validate(req: Request): ValidationResult
+    }
+
+    class FormatRule {
+        + ALLOWED_FORMATS: Set<String> {static}
+        + validate(model: Model3D): ValidationResult
+    }
+
+    class ValidationResult {
+        - ok: boolean
+        - errors: List<String>
+        - ValidationResult(ok: boolean, errors: List<String>)
+        + {static} ok(): ValidationResult
+        + {static} fail(errors: List<String>): ValidationResult
+        + isOk(): boolean
+        + getErrors(): List<String>
+    }
+}
+
+' ===== Пакет search =====
+package "ru.mirea.kt3.search" #F8FAFC {
+
+    interface SearchStrategy {
+        + search(models: List<Model3D>, queryTags: List<String>): List<SearchResult>
+    }
+
+    class TagSearchStrategy {
+        + search(models: List<Model3D>, queryTags: List<String>): List<SearchResult>
+    }
+
+    class SearchResult {
+        - model: Model3D
+        - matches: int
+        + SearchResult(model: Model3D, matches: int)
+        + getModel(): Model3D
+        + getMatches(): int
+    }
+}
+
+' ===== Пакет catalog =====
+package "ru.mirea.kt3.catalog" #F8FAFC {
+
+    class Catalog {
+        - models: List<Model3D>
+        - productsById: Map<Integer, Product>
+        - modelsById: Map<Integer, Model3D>
+        + addProduct(product: Product): void
+        + addModel(model: Model3D): void
+        + getModels(): List<Model3D>
+        + findModelById(id: int): Optional<Model3D>
+        + findProductById(id: int): Optional<Product>
+        + search(tags: List<String>, strategy: SearchStrategy): List<SearchResult>
+        + modelName(model: Model3D): String
+    }
+}
+
+' ===== Корневой пакет =====
+package "ru.mirea.kt3" #F8FAFC {
+
+    class Main {
+        + {static} main(args: String[]): void
+        - {static} loadTestData(): Catalog
+    }
+}
+
+' ===== Наследование (extends) =====
+ContentManager --|> User
+Designer3D --|> User
+Merchandiser --|> User
+
+' ===== Реализация интерфейсов (implements) =====
+' Rule<T> — параметризованный интерфейс; в стрелках пишем без <T>,
+' тип-параметр виден по контексту (CompletenessRule → Request, FormatRule → Model3D)
+CompletenessRule ..|> Rule
+FormatRule ..|> Rule
+TagSearchStrategy ..|> SearchStrategy
+
+' ===== Ассоциации =====
+Model3D "1" o-- "*" Tag : tags
+SearchResult --> Model3D : model
+Catalog "1" *-- "*" Model3D : models
+Catalog "1" *-- "*" Product : productsById
+Request --> User : userId
+Request --> Model3D : modelId
+Model3D ..> Product : productId (FK)
+
+' ===== Зависимости (uses) =====
+Catalog ..> SearchStrategy : delegates
+ContentManager ..> Rule : applies (Rule<Model3D>)
+ContentManager ..> Model3D : publishes
+Designer3D ..> Model3D : creates
+Merchandiser ..> Request : creates
+Main ..> Catalog : uses
+Main ..> CompletenessRule : runs
+Main ..> TagSearchStrategy : runs
+Main ..> Request : validates
+
+' ===== Легенда =====
+legend bottom
+  |= Символ |= Значение |
+  | сплошная с треугольником | наследование (extends) |
+  | пунктирная с треугольником | реализация интерфейса (implements) |
+  | сплошная со стрелкой | ассоциация (ссылка на объект) |
+  | ромб-владелец | композиция (часть существует только с владельцем) |
+  | пустой ромб | агрегация (часть может жить без владельца) |
+  | пунктирная со стрелкой | зависимость (uses) |
+endlegend
+
+@enduml
