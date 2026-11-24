@@ -1,15 +1,16 @@
-package ru.mirea.kt3.catalog;
+package java.ru.mirea.kt3.catalog;
 
-import ru.mirea.kt3.domain.Model3D;
-import ru.mirea.kt3.domain.Product;
-import ru.mirea.kt3.search.SearchResult;
-import ru.mirea.kt3.search.SearchStrategy;
+import java.ru.mirea.kt3.domain.Model3D;
+import java.ru.mirea.kt3.domain.Product;
+import java.ru.mirea.kt3.search.SearchResult;
+import java.ru.mirea.kt3.search.SearchStrategy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
 public class Catalog {
     private final List<Model3D> models = new ArrayList<>();
     private final Map<Integer, Product> productsById = new HashMap<>();
@@ -39,8 +40,10 @@ public class Catalog {
     public List<SearchResult> search(List<String> tags, SearchStrategy strategy) {
         return strategy.search(models, tags);
     }
+
     public String modelName(Model3D model) {
-        Product p = productsById.get(model.getProductId());
-        return p != null ? p.getName() : "(без названия)";
+        return findProductById(model.getProductId())
+                .map(Product::getName)
+                .orElse("(без названия)");
     }
 }
