@@ -1,13 +1,14 @@
-package ru.mirea.kt3.validation;
+package java.ru.mirea.kt3.validation;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 public class ValidationResult {
     private final boolean ok;
     private final List<String> errors;
 
-    public ValidationResult(boolean ok, List<String> errors) {
+    private ValidationResult(boolean ok, List<String> errors) {
         this.ok = ok;
         this.errors = new ArrayList<>(errors);
     }
