@@ -1,4 +1,4 @@
-package ru.mirea.kt3.domain;
+package java.ru.mirea.kt3.domain;
 
 import java.util.HashSet;
 import java.util.Set;
