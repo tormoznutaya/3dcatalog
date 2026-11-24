@@ -1,0 +1,14 @@
+# Java (КТ3)
+*.class
+out/
+build/
+target/
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+bin/
+*.log
+*.tmp
