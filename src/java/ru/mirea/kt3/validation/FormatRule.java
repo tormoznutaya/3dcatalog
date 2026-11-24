@@ -1,6 +1,6 @@
-package ru.mirea.kt3.validation;
+package java.ru.mirea.kt3.validation;
 
-import ru.mirea.kt3.domain.Model3D;
+import java.ru.mirea.kt3.domain.Model3D;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,6 @@ import java.util.Set;
 
 public class FormatRule implements Rule<Model3D> {
     public static final Set<String> ALLOWED_FORMATS = Set.of("glTF", "GLB");
-    public static final int MAX_MODEL_SIZE_MB = 50;
 
     @Override
     public ValidationResult validate(Model3D model) {
